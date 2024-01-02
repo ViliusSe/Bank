@@ -87,5 +87,41 @@ namespace Application.Services
             Response <TransactionResponse, TransactionEntity> result = new Response<TransactionResponse, TransactionEntity>();
             return result = await _repository.TopUp(dto);
         }
+
+        public async Task<Response<IEnumerable<TransactionHistoryResponse>, HistoryTransactions>> GetHistoryByUserid(HistoryTransactions dto)
+        {
+            if (dto.OrderBy != "da" || dto.OrderBy != "ca" || dto.OrderBy != "amount" || dto.OrderBy != "date")
+                    return new Response<IEnumerable<TransactionHistoryResponse>, HistoryTransactions>
+                    {
+                        IsSuccess = false,
+                        ErrorMessage = "Incorect ordering specified. Should be da, ca, amount or date."
+                    };
+
+
+            if (dto.Direction != "ASC" || dto.Direction != "DESC")
+            {
+                return new Response<IEnumerable<TransactionHistoryResponse>, HistoryTransactions>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = "Incorrect sorting method specified. Should be ASC or DSC."
+                };
+            }
+
+            var checkUser = await _userRepository.Find(dto.UserId);
+            if (!checkUser)
+                return new Response<IEnumerable<TransactionHistoryResponse>, HistoryTransactions>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = $"User with id {dto.UserId} doesn't exist."
+                };
+
+        var result = await _repository.GetHistoryByUserid(dto);
+            return new Response<IEnumerable<TransactionHistoryResponse>, HistoryTransactions>
+            {
+                IsSuccess = true,
+                ErrorMessage = null,
+                Data = result
+            };
+        }
     }
 }

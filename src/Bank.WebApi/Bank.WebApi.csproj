@@ -21,9 +21,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Scripts\Script1_CreateInitialBankDbTables.sql">
+    <EmbeddedResource Include="Scripts\Script1_CreateInitialBankDbTables.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

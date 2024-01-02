@@ -13,5 +13,6 @@ namespace Application.Interfaces
     {
         Task<Response<TransactionResponse, TransactionEntity>> Transfer(CreateTransaction dto);
         Task<Response<TransactionResponse, TransactionEntity>> TopUp(CreateTransaction dto);
+        Task<IEnumerable<TransactionHistoryResponse>> GetHistoryByUserid(HistoryTransactions dto);
     }
 }

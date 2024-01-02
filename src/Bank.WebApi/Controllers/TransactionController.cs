@@ -35,5 +35,18 @@ namespace Bank.WebApi.Controllers
             var result = await _service.TopUp(dto);
             return Ok(result);
         }
+
+        [HttpGet("{UserId}/{OrderBy}/{Direction}")]
+        public async Task<IActionResult> GetHistoryByUserid(int UserId, string OrderBy, string Direction)
+        {
+            HistoryTransactions dto = new HistoryTransactions()
+            {
+                UserId = UserId,
+                OrderBy = OrderBy,
+                Direction = Direction
+            };
+            var result = await _service.GetHistoryByUserid(dto);
+            return Ok(result);
+        }
     }
 }

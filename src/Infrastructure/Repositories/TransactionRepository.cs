@@ -125,16 +125,27 @@ namespace Infrastructure.Repositories
         {
             var queryArguments = new
             {
-                AccountType = dto.Type,
-                AccountId = dto.AccountId,
+                UserId = dto.UserId,
                 OrderBy = dto.OrderBy,
-                SortBy = dto.SortBy,
                 Direction = dto.Direction
             };
-            string query = @"SELECT * FROM accounts AS a
-                            JOIN transfers AS t ON a.id = t.@SortBy
-                            WHERE t.@sortBy = @AccountId
-                            ORDER BY t.@Order @Direction;";
+            string query = @"SELECT
+                                t.id AS transaction_id,
+                                da.IBAN AS debitor_IBAN,
+                                ca.IBAN AS creditor_IBAN,
+                                t.amount AS transfer_amount,
+                                t.date AS transaction_date
+                            FROM
+                                transactions t
+                            JOIN
+                                accounts da ON t.debitorAccount = da.id
+                            JOIN
+                                accounts ca ON t.creditorAccount = ca.id
+                            WHERE
+                                da.userId = @UserId
+                                OR ca.userId = @UserId
+                            ORDER BY
+                                @OrderBy @Direction;";
 
             var result = await _connection.QueryAsync<TransactionHistoryResponse>(query, queryArguments);
             return result;
