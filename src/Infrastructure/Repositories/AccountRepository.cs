@@ -55,6 +55,11 @@ public class AccountRepository : IAccountRepository
         }
     }
 
+    public async Task<IEnumerable<AccountEntity>> GetAll()
+    {
+        return await _connection.QueryAsync<AccountEntity>("SELECT * FROM accounts");
+    }
+
     public async Task<bool> Find(CreateAccount dto)
     {
         string query = "SELECT * FROM accounts WHERE userid = @UserId AND type = @Type";
@@ -75,6 +80,14 @@ public class AccountRepository : IAccountRepository
     {
         string query = "SELECT * FROM accounts WHERE id = @id";
         var result = await _connection.QueryFirstOrDefaultAsync<AccountEntity>(query, new { id = id });
+
+        return result;
+    }
+
+    public async Task<IEnumerable<AccountEntity?>> FindAll(int id)
+    {
+        string query = "SELECT * FROM accounts WHERE id = @id";
+        var result = await _connection.QueryAsync<AccountEntity>(query, new { id = id });
 
         return result;
     }

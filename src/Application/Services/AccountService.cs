@@ -68,5 +68,14 @@ namespace Application.Services
 
             return result;
         }
+
+        public async Task<IEnumerable<AccountEntity>> GetAll()
+        {
+            var result = await _repository.GetAll();
+            return result;
+
+
+
+        }
     }
 }

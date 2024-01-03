@@ -115,7 +115,7 @@ namespace Application.Services
                 };
 
             var result = await _repository.GetHistoryByUserid(dto);
-            var reformatedresult = await SortTransactions(result);
+            var reformatedresult = await SortTransactions(result, dto.UserId);
             return new Response<IEnumerable<TransactionHistoryResponse>, IEnumerable<SortedHistoryTransaction>>
             {
                 IsSuccess = true,
@@ -125,7 +125,7 @@ namespace Application.Services
             };
         }
 
-        private Task<IEnumerable<SortedHistoryTransaction>> SortTransactions(IEnumerable<TransactionHistoryResponse> transactions)
+        private async Task<IEnumerable<SortedHistoryTransaction>> SortTransactions(IEnumerable<TransactionHistoryResponse> transactions, int userId)
         {
             List<SortedHistoryTransaction> sortedHistory = new List<SortedHistoryTransaction>();
             
@@ -134,9 +134,16 @@ namespace Application.Services
            .Distinct()
            .ToList();
 
-
+            if (userAccounts.Count() == 0)
+            {
+                var requestResult = await _accountRepository.FindAll(userId);
+                foreach (var account in requestResult)
+                {
+                    userAccounts.Add(new TransactionHistoryResponse { Creditor_IBAN = account.IBAN });
+                }
+            }
             string? account1 = userAccounts.Count > 0 ? userAccounts[0].Debitor_IBAN : null;
-            string? account2 = userAccounts.Count > 1 ? userAccounts[1].Debitor_IBAN : null; ;
+            string? account2 = userAccounts.Count > 1 ? userAccounts[1].Debitor_IBAN : null;
 
             transactions.Select(tr =>
             {
@@ -177,7 +184,7 @@ namespace Application.Services
                 .Where(entry => entry != null)
                 .ToList();
 
-            return Task.FromResult<IEnumerable<SortedHistoryTransaction>>(sortedHistory);
+            return sortedHistory;
         }
     }
 }

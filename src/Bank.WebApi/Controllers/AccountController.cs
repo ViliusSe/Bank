@@ -32,5 +32,15 @@ namespace Bank.WebApi.Controllers
             var result = await _service.Create(dto);
             return Ok(result);
         }
+
+        /// <summary>
+        /// Shows all accounts
+        /// </summary>
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var result = await _service.GetAll();
+            return Ok(result);
+        }
     }
 }

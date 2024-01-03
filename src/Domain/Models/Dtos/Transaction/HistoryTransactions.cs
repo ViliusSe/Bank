@@ -9,7 +9,7 @@ namespace Domain.Models.Dtos.Transaction
     public class HistoryTransactions
     {
         public int UserId { get; set; }
-        public string OrderBy { get; set; } //da ca amount date
-        public string Direction { get; set; } //DESC ASC
+        public string OrderBy { get; set; } = "da";
+        public string Direction { get; set; } = "ASC";
     }
 }
