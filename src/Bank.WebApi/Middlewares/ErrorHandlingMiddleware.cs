@@ -3,15 +3,24 @@ using System.Net;
 
 namespace Bank.WebApi.Middlewares
 {
+    /// <summary>
+    /// Throws catched exceptions.
+    /// </summary>
     public class ErrorHandlingMiddleware
     {
         private readonly RequestDelegate _next;
 
+        /// <summary>
+        /// Initializes a new instance of the RequestDelegate.
+        /// </summary>
         public ErrorHandlingMiddleware(RequestDelegate next)
         {
             _next = next;
         }
 
+        /// <summary>
+        /// Invokes HttpContext.
+        /// </summary>
         public async Task Invoke(HttpContext context)
         {
             try

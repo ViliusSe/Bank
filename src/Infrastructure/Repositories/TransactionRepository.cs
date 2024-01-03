@@ -129,7 +129,7 @@ namespace Infrastructure.Repositories
                 OrderBy = dto.OrderBy,
                 Direction = dto.Direction
             };
-            string query = @"SELECT
+            string query = $@"SELECT
                                 t.id AS transaction_id,
                                 da.IBAN AS debitor_IBAN,
                                 ca.IBAN AS creditor_IBAN,
@@ -145,7 +145,7 @@ namespace Infrastructure.Repositories
                                 da.userId = @UserId
                                 OR ca.userId = @UserId
                             ORDER BY
-                                @OrderBy @Direction;";
+                               {dto.OrderBy} {dto.Direction};";
 
             var result = await _connection.QueryAsync<TransactionHistoryResponse>(query, queryArguments);
             return result;

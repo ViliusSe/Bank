@@ -5,17 +5,26 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Bank.WebApi.Controllers
 {
+    /// <summary>
+    /// Controller for managing transfers.
+    /// </summary>
     [ApiController, Route("[controller]")]
     public class TransactionController : ControllerBase
     {
 
         private readonly TransactionService _service;
+
+        /// <summary>
+        /// Initializes a new instance of the TransferController.
+        /// </summary>
         public TransactionController(TransactionService service)
         {
             _service = service;
         }
 
-
+        /// <summary>
+        /// Creates transaction from one account to another
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> Create([FromForm] CreateTransaction dto)
         {
@@ -23,6 +32,9 @@ namespace Bank.WebApi.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Creates TopUp transaction
+        /// </summary>
         [HttpPost("TopUp/{accountId}/{amount}")]
         public async Task<IActionResult> TopUp(int accountId, int amount)
         {
@@ -36,6 +48,9 @@ namespace Bank.WebApi.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Shows all transactions depending on provided user ID, and ordering by debitor or creditor acount, ascending or descending
+        /// </summary>
         [HttpGet("{UserId}/{OrderBy}/{Direction}")]
         public async Task<IActionResult> GetHistoryByUserid(int UserId, string OrderBy, string Direction)
         {

@@ -5,18 +5,27 @@ using Domain.Models;
 
 namespace Bank.WebApi.Controllers
 {
+    /// <summary>
+    /// Controller for managing users.
+    /// </summary>
     [ApiController, Route("[controller]")]
 
     public class UserController : ControllerBase
     {
 
         private readonly UserService _service;
+
+        /// <summary>
+        /// Initializes a new instance of the UserController.
+        /// </summary>
         public UserController(UserService service)
         {
             _service = service;
         }
 
-       
+        /// <summary>
+        /// Creates user
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> Create([FromForm] CreateUser dto)
         {
@@ -24,6 +33,9 @@ namespace Bank.WebApi.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Shows all users
+        /// </summary>
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -31,6 +43,9 @@ namespace Bank.WebApi.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Shows user infromation according given ID
+        /// </summary>
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {

@@ -1,8 +1,11 @@
+using Application;
 using Application.Interfaces;
 using Application.Services;
 using DbUp;
 using Domain.Models.Dtos.Responses;
+using Infrastructure;
 using Infrastructure.Repositories;
+using Microsoft.OpenApi.Models;
 using Npgsql;
 using System.Data;
 using System.Reflection;
@@ -11,14 +14,19 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "HopShop", Version = "v1" });
 
-builder.Services.AddScoped<UserService>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<AccountService>();
-builder.Services.AddScoped<IAccountRepository, AccountRepository>();
-builder.Services.AddScoped<TransactionService>();
-builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
+    // Include the XML comments file
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
+});
+
+
+builder.Services.AddApplicationsToDIContainer();
+builder.Services.AddInfrastructureToDIContainer();
 
 string? dbConnectionString = builder.Configuration.GetConnectionString("PostgreConnection");
 builder.Services.AddScoped<IDbConnection>(sp => new NpgsqlConnection(dbConnectionString));
